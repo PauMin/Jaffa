@@ -12,6 +12,8 @@ class Model
     const GET = 'get';
 
     protected $fillable = [];
+    protected $hidden = [];
+    private $primaryHidden = ['fillable', 'hidden', 'primaryHidden'];
 
     /**
      * Model constructor.
@@ -61,6 +63,15 @@ class Model
         }
 
         return null;
+    }
+
+    public function getData()
+    {
+        $hidden = array_merge($this->hidden, $this->primaryHidden);
+
+        return array_filter(get_object_vars($this), function ($key) use ($hidden) {
+            return !in_array($key, $hidden);
+        }, ARRAY_FILTER_USE_KEY);
     }
 
     private function destructMethodName($name)

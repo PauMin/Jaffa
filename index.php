@@ -10,4 +10,4 @@ $user->setName('John')
     ->setSurname('Doe')
     ->setAge(42);
 
-echo $user->getFullName();
+print_r($user->getData());
