@@ -1,0 +1,16 @@
+{
+    "name": "pmint/jaffa",
+    "authors": [
+        {
+            "name": "Paul Mintskovsky",
+            "email": "pmintskovsky@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Jaffa\\": "jaffa/",
+            "App\\": "app/"
+        }
+    }
+}
