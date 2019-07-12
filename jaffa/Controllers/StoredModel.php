@@ -2,22 +2,18 @@
 
 namespace Jaffa\Controllers;
 
-use PDO;
 use Jaffa\Helpers\StringHelper;
 
 class StoredModel extends Model
 {
-    /** @var PDO $database */
-    private $database;
-
     /** @var string $table */
     private $table;
+
 
     public function __construct()
     {
         parent::__construct();
 
-        // $this->database = new PDO('mysql:dbname=test;host=127.0.0.1', 'root', null);
         $this->table = $this->getTableName();
     }
 
