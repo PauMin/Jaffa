@@ -2,6 +2,7 @@
 
 namespace Jaffa\Controllers;
 
+use DateTime;
 use Jaffa\Helpers\StringHelper;
 
 class StoredModel extends Model
@@ -36,12 +37,49 @@ class StoredModel extends Model
         // Add data to table if there is no such
     }
 
+    public function update()
+    {
+        // Get models data
+        $data = $this->getData();
+
+        $set = array_map(function ($key, $value) {
+            $column = StringHelper::toUnderscore($key);
+            return sprintf('%s = %s', $column, $this->typeToString($value));
+        }, $data);
+        $values = implode(', ', $set);
+        $update = sprintf('UPDATE %s SET %s WHERE id = %s', $this->table, $values, $this->getId());
+
+        echo $update;
+
+    }
+
     /**
      * @todo Make function to return models variables defined inside fillable array
      */
     private function getFillableData() : array
     {
 
+    }
+
+    private function typeToString($value)
+    {
+        switch (gettype($value)) {
+            case 'string':
+                return sprintf('\'%s\'', $value);
+            case 'integer':
+            case 'float':
+                return sprintf('%s', $value);
+            case 'boolean':
+                $boolean = $value ? 'true' : 'false';
+                return sprintf('%s', $boolean);
+
+        }
+
+        if ($value instanceof DateTime) {
+            return sprintf('%s', $value->format('Y-m-d H:i:s'));
+        }
+
+        return $value;
     }
 
     private function getTableName()

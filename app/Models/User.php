@@ -5,20 +5,23 @@ namespace App\Models;
 use Jaffa\Controllers\StoredModel;
 
 /**
- * @method string getName()
- * @method string getSurname()
- * @method int getAge()
- * @method User setName(string $string)
- * @method User setSurname(string $string)
- * @method User setAge(int $int)
+ * @method integer getId()
+ * @method string  getName()
+ * @method string  getSurname()
+ * @method integer getAge()
+ * @method User    setName(string $string)
+ * @method User    setSurname(string $string)
+ * @method User    setAge(int $int)
  */
 class User extends StoredModel
 {
+    /** @var integer */
+    protected $id = 2;
     /** @var string */
     protected $name;
     /** @var string */
     protected $surname;
-    /** @var int */
+    /** @var integer */
     protected $age;
 
     /**
