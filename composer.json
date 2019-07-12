@@ -6,7 +6,9 @@
             "email": "pmintskovsky@gmail.com"
         }
     ],
-    "require": {},
+    "require": {
+        "ext-pdo": "*"
+    },
     "autoload": {
         "psr-4": {
             "Jaffa\\": "jaffa/",

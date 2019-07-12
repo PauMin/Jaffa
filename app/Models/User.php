@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Jaffa\Controllers\Model;
+use Jaffa\Controllers\StoredModel;
 
 /**
  * @method string getName()
@@ -12,7 +12,7 @@ use Jaffa\Controllers\Model;
  * @method User setSurname(string $string)
  * @method User setAge(int $int)
  */
-class User extends Model
+class User extends StoredModel
 {
     /** @var string */
     protected $name;
