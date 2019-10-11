@@ -74,7 +74,7 @@ class Model
         }, ARRAY_FILTER_USE_KEY);
     }
 
-    private function destructMethodName($name)
+    protected function destructMethodName($name)
     {
         preg_match('/([a-z]{1,})([A-Z][a-z,A-Z]{1,})/', $name, $destructed);
         return array_slice($destructed, 1);

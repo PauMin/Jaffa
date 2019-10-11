@@ -10,6 +10,8 @@ class StoredModel extends Model
     /** @var string $table */
     private $table;
 
+    /** @var array $affected */
+    private $affected;
 
     public function __construct()
     {
@@ -20,6 +22,10 @@ class StoredModel extends Model
 
     public function __call($name, $arguments)
     {
+        $methodData = $this->destructMethodName($name);
+        if ($methodData[0] === Model::SET) {
+            $this->setAffected($methodData[1], $arguments[0]);
+        }
         return parent::__call($name, $arguments);
     }
 
@@ -40,17 +46,29 @@ class StoredModel extends Model
     public function update()
     {
         // Get models data
-        $data = $this->getData();
+        $data = $this->affected;
 
-        $set = array_map(function ($key, $value) {
+        array_walk($data, function (&$value, $key) {
             $column = StringHelper::toUnderscore($key);
-            return sprintf('%s = %s', $column, $this->typeToString($value));
-        }, $data);
-        $values = implode(', ', $set);
+            $value = sprintf('%s = %s', $column, $this->typeToString($value));
+        });
+
+        $values = implode(', ', $data);
         $update = sprintf('UPDATE %s SET %s WHERE id = %s', $this->table, $values, $this->getId());
 
         echo $update;
 
+    }
+
+    public static function find($id)
+    {
+        $class = get_called_class();
+        $find = sprintf('SELECT * FROM %s WHERE id = %s', (new $class)->getTableName(), $id);
+        $model = new $class;
+
+        echo $find;
+
+        return $model;
     }
 
     /**
@@ -58,7 +76,7 @@ class StoredModel extends Model
      */
     private function getFillableData() : array
     {
-
+        return $this->fillable;
     }
 
     private function typeToString($value)
@@ -68,7 +86,7 @@ class StoredModel extends Model
                 return sprintf('\'%s\'', $value);
             case 'integer':
             case 'float':
-                return sprintf('%s', $value);
+                return sprintf('%d', $value);
             case 'boolean':
                 $boolean = $value ? 'true' : 'false';
                 return sprintf('%s', $boolean);
@@ -84,12 +102,18 @@ class StoredModel extends Model
 
     private function getTableName()
     {
-        $modelName = strtolower(array_pop(explode('\\', get_class($this))));
+        $className = explode('\\', get_class($this));
+        $modelName = strtolower(array_pop($className));
 
         // Pluralise model name
         // Reference https://www.grammarly.com/blog/plural-nouns/
         // Todo: Make string manipulation tool
 
         return StringHelper::pluralize($modelName);
+    }
+
+    private function setAffected($parameter, $argument)
+    {
+        $this->affected[$parameter] = $argument;
     }
 }
